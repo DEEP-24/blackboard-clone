@@ -1,6 +1,6 @@
  # Running the Project:
 
- To run this project locally, follow the steps below:
+ To run this project locally, follow the steps below.
 
  ## Prerequisites:
  - Require Node.js 18 or higher
