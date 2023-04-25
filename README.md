@@ -29,7 +29,7 @@
  - **Manage Rooms**: Maintain the rooms by creating new rooms allocating room number and maxCapacity.
  - **Manage Departments**: Maintain the departments.
  - **Manage Sections**: Manage the sections by creating and editing them.
- - **Manage Students (View)**: Can view the students who are currently using the blackboard.
+ - **Manage Students**: Can view the students who are currently using the blackboard.
 
  # Faculty Module:
  - **View Assigned Sections:** Access a detailed view of teaching assignments, students, and class schedules.
