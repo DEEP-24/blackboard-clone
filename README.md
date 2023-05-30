@@ -68,3 +68,7 @@
 
 - **RDS (Relational Database Service):**
   Acting as the central data store, AWS RDS houses the project's relational databases. It ensures seamless scaling, backups, and high availability, underpinning the vital data interactions within Blackboard.
+
+## Screenshots:
+
+![click here for screenshots](./screenshots.md)
