@@ -1,0 +1,161 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  password  String
+
+  @@map("Admin")
+}
+
+model Faculty {
+  id           String     @id @default(uuid())
+  name         String
+  email        String     @unique
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  password     String
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  departmentId String
+  Section      Section[]
+
+  @@map("Faculty")
+}
+
+model Student {
+  id            String       @id @default(uuid())
+  name          String
+  email         String       @unique
+  banner_no     String       @unique
+  date_of_birth DateTime
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  password      String
+  enrollments   Enrollment[]
+
+  @@map("Student")
+}
+
+model Semester {
+  id         String   @id @default(uuid())
+  name       String
+  start_date DateTime
+  end_date   DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  course     Course[]
+
+  @@map("Semester")
+}
+
+model Department {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  course    Course[]
+  faculty   Faculty[]
+
+  @@map("Department")
+}
+
+model Room {
+  id          String   @id @default(uuid())
+  number      String
+  maxCapacity Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  section Section[]
+
+  @@map("Room")
+}
+
+model Course {
+  id           String   @id @default(uuid())
+  name         String
+  description  String
+  code         String
+  credit_hours Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sections Section[]
+
+  semester     Semester   @relation(fields: [semesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  semesterId   String
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  departmentId String
+
+  @@map("Course")
+}
+
+model Section {
+  id        String   @id @default(uuid())
+  name      String
+  code      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  room      Room    @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  roomId    String
+  course    Course  @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  courseId  String
+  faculty   Faculty @relation(fields: [facultyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  facultyId String
+
+  timeSlots TimeSlot[]
+  students  Enrollment[]
+  documents Document[]
+
+  @@map("Section")
+}
+
+model TimeSlot {
+  id        String   @id @default(uuid())
+  day       String
+  startTime DateTime
+  endTime   DateTime
+
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sectionId String
+
+  @@map("TimeSlot")
+}
+
+model Enrollment {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  studentId String
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sectionId String
+
+  @@unique([studentId, sectionId])
+  @@map("Enrollment")
+}
+
+model Document {
+  id          String  @id @default(uuid())
+  key         String  @unique
+  name        String
+  description String?
+  extension   String
+  bucket      String
+  region      String
+  visible     Boolean @default(false)
+  section     Section @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sectionId   String  @map("section_id")
+}
